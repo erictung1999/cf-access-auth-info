@@ -22,7 +22,7 @@ async function handleRequest(request) {
         headers,
       });
     } else {
-      let jwtinfo = await isValidJwt(request)
+      let jwtinfo = await jwtPayload(request)
 
       const regionNames = new Intl.DisplayNames(
         ['en'], {
@@ -45,7 +45,7 @@ async function handleRequest(request) {
   }
 }
 
-async function isValidJwt(request) {
+async function jwtPayload(request) {
   const encodedToken = getJwt(request);
   if (encodedToken === null) {
     return false
@@ -66,13 +66,6 @@ function decodeJwt(token) {
   const signature = atob(parts[2].replace(/_/g, '/').replace(/-/g, '+'));
   console.log(header)
   return {
-    header: header,
     payload: payload,
-    signature: signature,
-    raw: {
-      header: parts[0],
-      payload: parts[1],
-      signature: parts[2]
-    }
   }
 }
